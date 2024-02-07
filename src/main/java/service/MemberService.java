@@ -7,14 +7,19 @@ import org.apache.ibatis.session.SqlSessionFactory;
 
 import java.util.List;
 
-public class memberService {
+public class MemberService {
     private final SqlSessionFactory sqlSessionFactory;
 
-    public memberService(SqlSessionFactory sqlSessionFactory) {
+    public MemberService(SqlSessionFactory sqlSessionFactory) {
         this.sqlSessionFactory = sqlSessionFactory;
     }
 
     public void addMember(Member member) {
+        List<Member> byEmail = findByEmail(member.getEmail());
+        if (!byEmail.isEmpty()) {
+            System.out.println("이미 가입된 이메일입니다.");
+            return;
+        }
         try (SqlSession session = sqlSessionFactory.openSession()) {
             MemberMapper memberMapper = session.getMapper(MemberMapper.class);
             memberMapper.insertMember(member);

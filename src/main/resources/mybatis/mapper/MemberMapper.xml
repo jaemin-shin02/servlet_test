@@ -15,6 +15,10 @@
         delete from member where id = #{id}
     </delete>
 
+    <select id="findById" resultType="main.java.domain.Member">
+        select * from Member where id = #{id}
+    </select>
+
     <select id="getAllNames" resultType="String">
         SELECT name FROM member
     </select>

@@ -15,5 +15,7 @@
     </environments>
     <mappers>
         <mapper resource="main/resources/mybatis/mapper/MemberMapper.xml"/>
+        <mapper resource="main/resources/mybatis/mapper/PostMapper.xml"/>
+        <mapper resource="main/resources/mybatis/mapper/ComentMapper.xml"/>
     </mappers>
 </configuration>
