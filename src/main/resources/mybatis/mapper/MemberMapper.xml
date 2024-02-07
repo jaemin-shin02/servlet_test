@@ -1,0 +1,31 @@
+<!-- src/main/resources/org/example/mybatis/mapper/MemberMapper.xml -->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="main.java.mybatis.mapper.MemberMapper">
+
+    <insert id="insertMember" parameterType="main.java.domain.Member">
+        INSERT INTO member (name, email) values (#{name}, #{email})
+    </insert>
+
+    <update id="updateMember" parameterType="main.java.domain.Member">
+        update member SET name = #{name} where id = #{id}
+    </update>
+
+    <delete id="deleteMember">
+        delete from member where id = #{id}
+    </delete>
+
+    <select id="getAllNames" resultType="String">
+        SELECT name FROM member
+    </select>
+
+    <select id="findByName" parameterType="String" resultType="java.util.List">
+        select * from member where name = #{name}
+    </select>
+
+    <select id="findByEmail" parameterType="String" resultType="java.util.List">
+        select * from member where name = #{email}
+    </select>
+
+
+</mapper>
