@@ -27,10 +27,10 @@ public class Example {
                 PostService postService = new PostService(session);
                 ComentService comentService = new ComentService(session);
 
-                List<Coment> byPostId = comentService.findByPostId(2L);
-                for (Coment coment : byPostId) {
-                    System.out.println("coment.getContent() = " + coment.getContent());
-                }
+//                List<Coment> byPostId = comentService.findByPostId(2L);
+//                for (Coment coment : byPostId) {
+//                    System.out.println("coment.getContent() = " + coment.getContent());
+//                }
             }
         } catch (IOException e) {
             e.printStackTrace();
