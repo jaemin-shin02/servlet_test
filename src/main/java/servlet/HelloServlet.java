@@ -33,6 +33,8 @@ public class HelloServlet extends HttpServlet {
             out.println("<h2>Welcome, " + username + "!</h2>");
             out.println("<p>This is a protected page.</p>");
             out.println("<form action=\"/logout\" method=\"post\">");
+            out.println("<a href=\"/createPost\">New Post</a>");
+            out.println("<a href=\"/memberList\">Users</a>");
             out.println("<input type=\"submit\" value=\"Logout\">");
             out.println("</form>");
         } else {
@@ -40,6 +42,7 @@ public class HelloServlet extends HttpServlet {
             out.println("<h2>Welcome to My Website</h2>");
             out.println("<p>Please login to access the content.</p>");
             out.println("<a href=\"/login\">Login</a>");
+            out.println("<a href=\"/join\">Join</a>");
         }
         out.println("</body>");
         out.println("</html>");

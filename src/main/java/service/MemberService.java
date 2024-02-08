@@ -33,13 +33,15 @@ public class MemberService {
     }
 
 
-    public void addMember(Member member) {
+    public boolean addMember(Member member) {
         if (memberMapper.findByEmail(member.getEmail()).isEmpty()) {
             memberMapper.insertMember(member);
+            sqlSession.commit();
+            return true; // 회원 추가 성공
         } else {
             System.out.println("이미 가입된 이메일입니다.");
+            return false; // 이미 가입된 이메일이 있어 회원 추가 실패
         }
-        sqlSession.commit();
     }
 
     public void updateMember(UpdateMemberDto member) {

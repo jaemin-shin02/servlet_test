@@ -1,4 +1,4 @@
-package main.java.servlet.member;
+package main.java.servlet.post;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -6,10 +6,10 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import main.java.domain.Member;
+import main.java.domain.Post;
 import main.java.dto.LoginRequest;
-import main.java.mybatis.mapper.MemberMapper;
 import main.java.service.MemberService;
+import main.java.service.PostService;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -18,10 +18,9 @@ import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
-import java.util.List;
 
-@WebServlet("/login")
-public class LoginServlet extends HttpServlet {
+@WebServlet("/createPost")
+public class CreatePost extends HttpServlet {
     private SqlSessionFactory sqlSessionFactory;
 
     @Override
@@ -37,28 +36,25 @@ public class LoginServlet extends HttpServlet {
     }
 
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        // GET 요청이 들어왔을 때는 로그인 페이지를 보여줍니다.
-        // 일반적으로 로그인 폼이 있는 HTML 페이지를 클라이언트에게 반환합니다.
-
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType("text/html");
         PrintWriter out = response.getWriter();
+
         out.println("<!DOCTYPE html>");
         out.println("<html lang=\"en\">");
         out.println("<head>");
         out.println("<meta charset=\"UTF-8\">");
         out.println("<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">");
-        out.println("<title>Login</title>");
+        out.println("<title>Create Post</title>");
         out.println("</head>");
         out.println("<body>");
-        out.println("<h2>Login</h2>");
-        out.println("<form action=\"login\" method=\"post\">");
-        out.println("<label for=\"username\">Username:</label>");
-        out.println("<input type=\"text\" id=\"username\" name=\"username\" required><br><br>");
-        out.println("<label for=\"email\">Email:</label>");
-        out.println("<input type=\"text\" id=\"email\" name=\"email\" required><br><br>");
-        out.println("<input type=\"submit\" value=\"Login\">");
+        out.println("<h2>Create New Post</h2>");
+        out.println("<form action=\"/createPost\" method=\"post\">");
+        out.println("<label for=\"title\">Title:</label><br>");
+        out.println("<input type=\"text\" id=\"title\" name=\"title\" required><br><br>");
+        out.println("<label for=\"content\">Content:</label><br>");
+        out.println("<textarea id=\"content\" name=\"content\" rows=\"4\" cols=\"50\" required></textarea><br><br>");
+        out.println("<input type=\"submit\" value=\"Submit\">");
         out.println("</form>");
         out.println("</body>");
         out.println("</html>");
@@ -70,31 +66,21 @@ public class LoginServlet extends HttpServlet {
         request.setCharacterEncoding("UTF-8");
 
         // 사용자가 제출한 폼에서 이름과 비밀번호를 가져옴
-        String username = request.getParameter("username");
-        String email = request.getParameter("email");
+        String title = request.getParameter("title");
+        String content = request.getParameter("content");
 
-        LoginRequest info = new LoginRequest();
-        info.setName(username);
-        info.setEmail(email);
 
         try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
             // SqlSession을 사용하여 데이터베이스 작업 수행
             MemberService memberService = new MemberService(sqlSession);
-            Long result = memberService.login(info);
+            PostService postService = new PostService(sqlSession);
 
-            if (result != null && result > 0) {
-                // 로그인 성공 시 세션에 사용자 이름 저장
-                HttpSession session = request.getSession();
-                session.setAttribute("memberId", result);
-                session.setAttribute("username", username);
+            HttpSession session = request.getSession();
+            Long memberId = (Long) session.getAttribute("memberId");
+            postService.addPost(Post.createPost(memberId, title, content));
 
-                // 로그인 성공 페이지로 리다이렉트
-                response.sendRedirect("/");
-            } else {
-                // 로그인 실패 시 로그인 페이지로 리다이렉트
-                response.sendRedirect("/"); // 실패 시 리다이렉트할 페이지
-            }
+            response.sendRedirect("/");
         }
-    }
 
+    }
 }
