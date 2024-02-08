@@ -1,56 +1,44 @@
 package main.java.service;
 
 import main.java.domain.Post;
+import main.java.dto.PostSearchConditon;
 import main.java.mybatis.mapper.PostMapper;
 import org.apache.ibatis.session.SqlSession;
-import org.apache.ibatis.session.SqlSessionFactory;
 
 import java.util.List;
 
 public class PostService {
-    private final SqlSessionFactory sqlSessionFactory;
+    private final SqlSession sqlSession;
+    private final PostMapper postMapper;
 
-    public PostService(SqlSessionFactory sqlSessionFactory) {
-        this.sqlSessionFactory = sqlSessionFactory;
+    public PostService(SqlSession sqlSession) {
+        this.sqlSession = sqlSession;
+        this.postMapper = sqlSession.getMapper(PostMapper.class);
     }
 
     public void addPost(Post post) {
-        try (SqlSession session = sqlSessionFactory.openSession()) {
-            PostMapper postMapper = session.getMapper(PostMapper.class);
-            postMapper.insertPost(post);
-            session.commit();
-        }
+        postMapper.insertPost(post);
+        sqlSession.commit();
     }
 
-//    public void updatePost(Post post) {
-//        try (SqlSession session = sqlSessionFactory.openSession()) {
-//            PostMapper postMapper = session.getMapper(PostMapper.class);
-//
-//
-//            session.commit();
-//        }
-//    }
-
     public void deletePost(Long postId) {
-        try (SqlSession session = sqlSessionFactory.openSession()) {
-            PostMapper postMapper = session.getMapper(PostMapper.class);
-            postMapper.deletePost(postId);
-
-            session.commit();
-        }
+        postMapper.deletePost(postId);
+        sqlSession.commit();
     }
 
     public Post findById(Long postId) {
-        try (SqlSession session = sqlSessionFactory.openSession()) {
-            PostMapper postMapper = session.getMapper(PostMapper.class);
-            return postMapper.findById(postId);
-        }
+        return postMapper.findById(postId);
+    }
+
+    public List<Post> findAll() {
+        return postMapper.findAll();
     }
 
     public List<Post> findByMemberId(Long memberId) {
-        try (SqlSession session = sqlSessionFactory.openSession()) {
-            PostMapper postMapper = session.getMapper(PostMapper.class);
-            return postMapper.findByMemberId(memberId);
-        }
+        return postMapper.findByMemberId(memberId);
+    }
+
+    public List<Post> searchPost(PostSearchConditon conditon){
+        return postMapper.searchPost(conditon);
     }
 }

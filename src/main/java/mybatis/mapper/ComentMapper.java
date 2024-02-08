@@ -10,6 +10,7 @@ public interface ComentMapper {
     void deleteComent(Long comentId);
 
     Coment findById(Long comentId);
+    List<Coment> findAll();
 
     List<Coment> findByPostId(Long postId);
 }

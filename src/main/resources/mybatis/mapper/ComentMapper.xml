@@ -19,7 +19,11 @@
         select * from coment where id = #{id}
     </select>
 
-    <select id="findByPostId" parameterType="String" resultType="java.util.List">
+    <select id="findAll" resultType="main.java.domain.Coment">
+        select * from coment
+    </select>
+
+    <select id="findByPostId" resultType="main.java.domain.Coment">
         select * from coment where postId = #{postId}
     </select>
 

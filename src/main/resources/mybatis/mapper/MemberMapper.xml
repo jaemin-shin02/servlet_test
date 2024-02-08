@@ -8,7 +8,7 @@
     </insert>
 
     <update id="updateMember" parameterType="main.java.domain.Member">
-        update member SET name = #{name} where id = #{id}
+        update member SET email = #{email} where id = #{id}
     </update>
 
     <delete id="deleteMember">
@@ -19,17 +19,22 @@
         select * from Member where id = #{id}
     </select>
 
+    <select id="findAll" resultType="main.java.domain.Member">
+        select * from Member
+    </select>
+
     <select id="getAllNames" resultType="String">
         SELECT name FROM member
     </select>
 
-    <select id="findByName" parameterType="String" resultType="java.util.List">
+    <select id="findByName" parameterType="String" resultType="main.java.domain.Member">
         select * from member where name = #{name}
     </select>
 
-    <select id="findByEmail" parameterType="String" resultType="java.util.List">
-        select * from member where name = #{email}
+    <select id="findByEmail" parameterType="String" resultType="main.java.domain.Member">
+        select * from member where email = #{email}
     </select>
+
 
 
 </mapper>

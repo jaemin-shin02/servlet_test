@@ -19,8 +19,24 @@
         select * from Post where id = #{id}
     </select>
 
-    <select id="findByMemberId" parameterType="String" resultType="java.util.List">
+    <select id="findAll" resultType="main.java.domain.Post">
+        select * from Post
+    </select>
+
+    <select id="findByMemberId" resultType="main.java.domain.Post">
         select * from Post where memberId = #{memberId}
+    </select>
+
+    <select id="searchPost" resultType="main.java.domain.Post">
+        SELECT * FROM Post
+        <where>
+            <if test="title != null">
+                AND title like  concat('%', #{title}, '%')
+            </if>
+            <if test="content != null">
+                AND content like  concat('%', #{content}, '%')
+            </if>
+        </where>
     </select>
 
 </mapper>

@@ -1,6 +1,7 @@
 package main.java.service;
 
 import main.java.domain.Member;
+import main.java.dto.UpdateMemberDto;
 import main.java.mybatis.mapper.MemberMapper;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -8,54 +9,46 @@ import org.apache.ibatis.session.SqlSessionFactory;
 import java.util.List;
 
 public class MemberService {
-    private final SqlSessionFactory sqlSessionFactory;
+    private final SqlSession sqlSession;
+    private final MemberMapper memberMapper;
 
-    public MemberService(SqlSessionFactory sqlSessionFactory) {
-        this.sqlSessionFactory = sqlSessionFactory;
+    public MemberService(SqlSession sqlSession) {
+        this.sqlSession = sqlSession;
+        this.memberMapper = sqlSession.getMapper(MemberMapper.class);
     }
 
     public void addMember(Member member) {
-        List<Member> byEmail = findByEmail(member.getEmail());
-        if (!byEmail.isEmpty()) {
-            System.out.println("이미 가입된 이메일입니다.");
-            return;
-        }
-        try (SqlSession session = sqlSessionFactory.openSession()) {
-            MemberMapper memberMapper = session.getMapper(MemberMapper.class);
+        if (memberMapper.findByEmail(member.getEmail()).isEmpty()) {
             memberMapper.insertMember(member);
-            session.commit();
+        } else {
+            System.out.println("이미 가입된 이메일입니다.");
         }
+        sqlSession.commit();
     }
 
-    public void updateMember(Member member) {
-        try (SqlSession session = sqlSessionFactory.openSession()) {
-            MemberMapper memberMapper = session.getMapper(MemberMapper.class);
-            memberMapper.updateMember(member);
-            session.commit();
-        }
+    public void updateMember(UpdateMemberDto member) {
+        memberMapper.updateMember(member);
+        sqlSession.commit();
     }
 
-    public void deleteMember(Member member) {
-        try (SqlSession session = sqlSessionFactory.openSession()) {
-            MemberMapper memberMapper = session.getMapper(MemberMapper.class);
-            memberMapper.deleteMember(member.getId());
-            session.commit();
-        }
+    public void deleteMember(Long memberId) {
+        memberMapper.deleteMember(memberId);
+        sqlSession.commit();
+    }
+
+    public Member findById(Long id) {
+        return memberMapper.findById(id);
+    }
+
+    public List<Member> findAll(){
+        return memberMapper.findAll();
     }
 
     public List<Member> findByName(String name) {
-        try (SqlSession session = sqlSessionFactory.openSession()) {
-            MemberMapper memberMapper = session.getMapper(MemberMapper.class);
-            List<Member> byName = memberMapper.findByName(name);
-            return byName;
-        }
+        return memberMapper.findByName(name);
     }
 
     public List<Member> findByEmail(String email) {
-        try (SqlSession session = sqlSessionFactory.openSession()) {
-            MemberMapper memberMapper = session.getMapper(MemberMapper.class);
-            List<Member> byEmail = memberMapper.findByEmail(email);
-            return byEmail;
-        }
+        return memberMapper.findByEmail(email);
     }
 }
