@@ -39,4 +39,12 @@
         </where>
     </select>
 
+    <select id="totalCount" resultType="int">
+        select count(*) from Post
+    </select>
+
+    <select id="pageTest" resultType="main.java.domain.Post">
+        select * from Post p ORDER BY p.id DESC LIMIT #{limit} OFFSET #{offset}
+    </select>
+
 </mapper>

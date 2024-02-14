@@ -41,4 +41,13 @@ public class PostService {
     public List<Post> searchPost(PostSearchConditon conditon){
         return postMapper.searchPost(conditon);
     }
+
+    public int totalCount(){
+        return postMapper.totalCount();
+    }
+
+    public List<Post> page(int offset, int limit){
+        return postMapper.pageTest(limit, offset);
+    }
+
 }
